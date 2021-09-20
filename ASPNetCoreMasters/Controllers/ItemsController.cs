@@ -20,10 +20,16 @@ namespace ASPNetCoreMasters.Controllers
             return id;
         }
 
-        public IActionResult Post(ItemCreateBindingModel itemCreateBidingModel)
+        public IActionResult Post([FromBody] ItemCreateBindingModel itemCreateBidingModel)
         {
             var item = new ItemService();
             var itemDTO = new ItemDTO();
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             itemDTO.Text = itemCreateBidingModel.Text;
             item.Save(itemDTO);
 
