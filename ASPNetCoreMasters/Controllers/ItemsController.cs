@@ -11,17 +11,16 @@ using System.Threading.Tasks;
 namespace ASPNetCoreMasters.Controllers
 {
     [ApiController]
+    [Route("[controller]")]
     public class ItemsController : ControllerBase
     {   
         [HttpGet]
-        [Route("/items")]
         public IActionResult GetAll()
         {
             return Ok("GetAll route");
         }
 
-        [HttpGet]
-        [Route("/items/{itemId}")]
+        [HttpGet("{itemId}")]
         public IActionResult Get(int itemId)
         {
             var itemService = new ItemService();
@@ -29,15 +28,13 @@ namespace ASPNetCoreMasters.Controllers
             return Ok($"Get {itemId}");
         }
 
-        [HttpGet]
-        [Route("/items/filterBy?[text]={text}")]
+        [HttpGet("GetByFilters")]
         public IActionResult GetByFilters([FromQuery] Dictionary<string, string> filters)
         {
-            return Ok($"GetByFilters {filters}");
+            return Ok($"GetByFilters");
         }
 
-        [HttpPost]
-        [Route("/items")]
+        [HttpPost("{itemcreatemodel}")]
         public IActionResult Post([FromBody] ItemCreateBindingModel itemcreatemodel)
         {
             var itemService = new ItemService();
@@ -45,24 +42,22 @@ namespace ASPNetCoreMasters.Controllers
             itemDTO.Text = itemcreatemodel.Text;
             itemService.Save(itemDTO);
 
-            return Ok($"Post {itemcreatemodel}");
+            return Ok($"Post {itemcreatemodel.Id} - {itemcreatemodel.Text} ");
         }
 
-        [HttpPut]
-        [Route("/items/itemId")]
-        public IActionResult Put(int id, [FromBody] ItemUpdateBindingModel itemUpdateModel)
+        [HttpPut("{itemId}")]
+        public IActionResult Put(int itemId, [FromBody] ItemUpdateBindingModel itemUpdateModel)
         {
             var itemService = new ItemService();
             var itemDTO = new ItemDTO();
             itemDTO.Text = itemUpdateModel.Text;
             itemService.Save(itemDTO);
 
-            return Ok($"Put {itemUpdateModel}");
+            return Ok($"Put {itemId} - {itemUpdateModel.Text} ");
         }
 
-        [HttpDelete]
-        [Route("/items/itemId")]
-        public IActionResult Put(int itemId)
+        [HttpDelete("{itemId}")]
+        public IActionResult Delete(int itemId)
         {
             return Ok($"Delete {itemId}");
         }
