@@ -28,13 +28,13 @@ namespace ASPNetCoreMasters.Controllers
             return Ok($"Get {itemId}");
         }
 
-        [HttpGet("GetByFilters")]
+        [HttpGet("filterBy")]
         public IActionResult GetByFilters([FromQuery] Dictionary<string, string> filters)
         {
             return Ok($"GetByFilters");
         }
-
-        [HttpPost("{itemcreatemodel}")]
+        
+        [HttpPost]
         public IActionResult Post([FromBody] ItemCreateBindingModel itemcreatemodel)
         {
             var itemService = new ItemService();
