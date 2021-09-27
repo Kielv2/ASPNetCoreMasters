@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Services
 {
-    public class ItemService
+    public class ItemService:IItemService
     {
         public IEnumerable<int> GetAll(int userId)
         {
@@ -25,6 +25,36 @@ namespace Services
         {
 
             return Id.ToString();
+        }
+
+        public IEnumerable<ItemDTO> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<ItemDTO> GetAllByFilter(ItemByFilterDTO filters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ItemDTO Get(int ItemId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(ItemDTO itemDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(ItemDTO itemDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

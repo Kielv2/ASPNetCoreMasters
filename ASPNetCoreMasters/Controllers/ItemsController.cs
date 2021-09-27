@@ -12,7 +12,7 @@ namespace ASPNetCoreMasters.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ItemsController : ControllerBase
+    public class ItemsController : ControllerBase, IItemService
     {   
         [HttpGet]
         public IActionResult GetAll()
@@ -62,5 +62,34 @@ namespace ASPNetCoreMasters.Controllers
             return Ok($"Delete {itemId}");
         }
 
+        IEnumerable<ItemDTO> IItemService.GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<ItemDTO> GetAllByFilter(ItemByFilterDTO filters)
+        {
+            throw new NotImplementedException();
+        }
+
+        ItemDTO IItemService.Get(int ItemId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(ItemDTO itemDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(ItemDTO itemDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
