@@ -48,11 +48,7 @@ namespace ASPNetCoreMasters
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action}/{id?}"
-                );
-
+                endpoints.MapControllers();
             });
         }
     }

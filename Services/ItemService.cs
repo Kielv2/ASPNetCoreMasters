@@ -19,8 +19,12 @@ namespace Services
             item.Text = itemDTO.Text;
 
             Console.WriteLine("Saved");
-            
         }
 
+        public string GetItem(int Id)
+        {
+
+            return Id.ToString();
+        }
     }
 }

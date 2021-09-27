@@ -10,32 +10,57 @@ using System.Threading.Tasks;
 
 namespace ASPNetCoreMasters.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class ItemsController : ControllerBase
     {   
-        public int Get(int id)
+        [HttpGet]
+        public IActionResult GetAll()
         {
-            //var item = new ItemService();
-            //var result = item.GetAll(id);
-
-            return id;
+            return Ok("GetAll route");
         }
 
-        public IActionResult Post([FromBody] ItemCreateBindingModel itemCreateBidingModel)
+        [HttpGet("{itemId}")]
+        public IActionResult Get(int itemId)
         {
-            var item = new ItemService();
+            var itemService = new ItemService();
+            itemService.GetItem(itemId);
+            return Ok($"Get {itemId}");
+        }
+
+        [HttpGet("filterBy")]
+        public IActionResult GetByFilters([FromQuery] Dictionary<string, string> filters)
+        {
+            return Ok($"GetByFilters");
+        }
+        
+        [HttpPost]
+        public IActionResult Post([FromBody] ItemCreateBindingModel itemcreatemodel)
+        {
+            var itemService = new ItemService();
             var itemDTO = new ItemDTO();
+            itemDTO.Text = itemcreatemodel.Text;
+            itemService.Save(itemDTO);
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            itemDTO.Text = itemCreateBidingModel.Text;
-            item.Save(itemDTO);
-
-            return Ok();
+            return Ok($"Post {itemcreatemodel.Id} - {itemcreatemodel.Text} ");
         }
 
+        [HttpPut("{itemId}")]
+        public IActionResult Put(int itemId, [FromBody] ItemUpdateBindingModel itemUpdateModel)
+        {
+            var itemService = new ItemService();
+            var itemDTO = new ItemDTO();
+            itemDTO.Text = itemUpdateModel.Text;
+            itemService.Save(itemDTO);
+
+            return Ok($"Put {itemId} - {itemUpdateModel.Text} ");
+        }
+
+        [HttpDelete("{itemId}")]
+        public IActionResult Delete(int itemId)
+        {
+            return Ok($"Delete {itemId}");
+        }
 
     }
 }
