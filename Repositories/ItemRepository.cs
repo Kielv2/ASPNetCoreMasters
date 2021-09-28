@@ -8,21 +8,35 @@ namespace Repositories
 {
     public class ItemRepository : IItemRepository 
     {
+        public readonly DataContext _dataContext;
+        public ItemRepository(DataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
+
         public IQueryable<Item> All()
         {
-            var dataContext = new DataContext();
 
-            throw new NotImplementedException();
+            return _dataContext.Items.AsQueryable();
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            _dataContext.Items.RemoveAll(x => x.Id == id);
         }
 
         public void Save(Item item)
-        {   
-            throw new NotImplementedException();
+        {
+            Item data = _dataContext.Items.Where(x => x.Id == item.Id).FirstOrDefault();
+
+            if (data == null)
+            {
+                _dataContext.Items.Add(item);
+            }
+            else
+            {
+                data.Text = data.Text;
+            }
         }
     }
 }

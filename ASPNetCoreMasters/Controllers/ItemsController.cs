@@ -1,6 +1,8 @@
 ﻿using ASPNetCoreMasters.BindingModels;
+using DomainModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Repositories;
 using Services;
 using Services.DTO;
 using System;
@@ -12,35 +14,52 @@ namespace ASPNetCoreMasters.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ItemsController : ControllerBase, IItemService
-    {   
+    public class ItemsController : ControllerBase
+    {
+        private readonly IItemService _itemService;
+
+        public ItemsController(IItemService itemService)
+        {
+            _itemService = itemService;
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok("GetAll route");
+            var result = _itemService.GetAll();
+            return Ok(result);
         }
 
         [HttpGet("{itemId}")]
         public IActionResult Get(int itemId)
         {
-            var itemService = new ItemService();
-            itemService.GetItem(itemId);
-            return Ok($"Get {itemId}");
+            if (String.IsNullOrEmpty(itemId.ToString()))
+            {
+                return BadRequest("Invalid Input");
+            }
+
+            var result = _itemService.Get(itemId);
+            return Ok(result);
         }
 
         [HttpGet("filterBy")]
         public IActionResult GetByFilters([FromQuery] Dictionary<string, string> filters)
         {
+            var filter = filters.FirstOrDefault(x => x.Value == "1").Value;
+            var filterDTO = new ItemByFilterDTO();
+            filterDTO.Text = filter;
+
+            _itemService.GetAllByFilter(filterDTO);
             return Ok($"GetByFilters");
         }
-        
+
         [HttpPost]
         public IActionResult Post([FromBody] ItemCreateBindingModel itemcreatemodel)
         {
-            var itemService = new ItemService();
+
             var itemDTO = new ItemDTO();
             itemDTO.Text = itemcreatemodel.Text;
-            itemService.Save(itemDTO);
+            _itemService.Add(itemDTO);
 
             return Ok($"Post {itemcreatemodel.Id} - {itemcreatemodel.Text} ");
         }
@@ -48,10 +67,9 @@ namespace ASPNetCoreMasters.Controllers
         [HttpPut("{itemId}")]
         public IActionResult Put(int itemId, [FromBody] ItemUpdateBindingModel itemUpdateModel)
         {
-            var itemService = new ItemService();
             var itemDTO = new ItemDTO();
             itemDTO.Text = itemUpdateModel.Text;
-            itemService.Save(itemDTO);
+            _itemService.Update(itemDTO);
 
             return Ok($"Put {itemId} - {itemUpdateModel.Text} ");
         }
@@ -59,37 +77,9 @@ namespace ASPNetCoreMasters.Controllers
         [HttpDelete("{itemId}")]
         public IActionResult Delete(int itemId)
         {
-            return Ok($"Delete {itemId}");
+            _itemService.Delete(itemId);
+            return Ok();
         }
 
-        IEnumerable<ItemDTO> IItemService.GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<ItemDTO> GetAllByFilter(ItemByFilterDTO filters)
-        {
-            throw new NotImplementedException();
-        }
-
-        ItemDTO IItemService.Get(int ItemId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Add(ItemDTO itemDTO)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(ItemDTO itemDTO)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Add(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

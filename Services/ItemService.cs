@@ -1,12 +1,66 @@
 ﻿using DomainModels;
+using Repositories;
 using Services.DTO;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Services
 {
     public class ItemService:IItemService
     {
+                private readonly List<int> numbers = new List<int> { 1, 2, 3 };
+        public readonly IItemRepository _itemRepository;
+
+        public ItemService( IItemRepository itemRepository)
+        {
+            _itemRepository = itemRepository;
+
+        }
+        public IEnumerable<ItemDTO> GetAll()
+        {
+            var items = _itemRepository.All();
+            IEnumerable<ItemDTO> response = items.Select(s => new ItemDTO() { Id = s.Id, Text = s.Text });
+            return response;
+        }
+
+        public IEnumerable<ItemDTO> GetAllByFilter(ItemByFilterDTO filters)
+        {
+            var items = _itemRepository.All();
+            IEnumerable<ItemDTO> response = items.Select(s => new ItemDTO() { Id = s.Id, Text = s.Text }).Where(x => x.Text == filters.Text);
+            return response;
+        }
+
+        public ItemDTO Get(int itemId)
+        {
+
+            var items = _itemRepository.All();
+            return items.Select(s => new ItemDTO() { Id = s.Id, Text = s.Text }).Where(x => x.Id == itemId).FirstOrDefault();
+
+        }
+
+        public void Add(ItemDTO itemDTO)
+        {
+            Item item = new Item();
+            item.Text = itemDTO.Text;
+            item.Id = itemDTO.Id;
+            _itemRepository.Save(item);
+
+        }
+
+        public void Update(ItemDTO itemDTO)
+        {
+            Item item = new Item();
+            item.Text = itemDTO.Text;
+            item.Id = itemDTO.Id;
+            _itemRepository.Save(item);
+        }
+
+        public void Delete(int id)
+        {
+            _itemRepository.Delete(id);
+
+        }
         public IEnumerable<int> GetAll(int userId)
         {
             var arr = new int[] {1, 2, 3 };
@@ -27,34 +81,17 @@ namespace Services
             return Id.ToString();
         }
 
-        public IEnumerable<ItemDTO> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+        //public IEnumerable<ItemDTO> GetAll()
+        //{
+        //    var items = new List<ItemDTO>();
 
-        public IEnumerable<ItemDTO> GetAllByFilter(ItemByFilterDTO filters)
-        {
-            throw new NotImplementedException();
-        }
+        //    items.Add(new ItemDTO { Id = 1, Text = "test1" });
+        //    items.Add(new ItemDTO { Id = 2, Text = "test2" });
 
-        public ItemDTO Get(int ItemId)
-        {
-            throw new NotImplementedException();
-        }
+        //    IEnumerable <ItemDTO> result = items;
 
-        public void Add(ItemDTO itemDTO)
-        {
-            throw new NotImplementedException();
-        }
+        //    return result;
+        //}
 
-        public void Update(ItemDTO itemDTO)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Add(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

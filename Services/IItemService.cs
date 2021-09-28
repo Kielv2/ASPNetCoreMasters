@@ -12,6 +12,6 @@ namespace Services
         public ItemDTO Get(int ItemId);
         public void Add(ItemDTO itemDTO);
         public void Update(ItemDTO itemDTO);
-        public void Add(int id);
+        public void Delete(int id);
     }
 }
