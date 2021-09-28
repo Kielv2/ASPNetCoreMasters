@@ -9,7 +9,7 @@ namespace Services
 {
     public class ItemService:IItemService
     {
-                private readonly List<int> numbers = new List<int> { 1, 2, 3 };
+        private readonly List<int> numbers = new List<int> { 1, 2, 3 };
         public readonly IItemRepository _itemRepository;
 
         public ItemService( IItemRepository itemRepository)
@@ -27,7 +27,7 @@ namespace Services
         public IEnumerable<ItemDTO> GetAllByFilter(ItemByFilterDTO filters)
         {
             var items = _itemRepository.All();
-            IEnumerable<ItemDTO> response = items.Select(s => new ItemDTO() { Id = s.Id, Text = s.Text }).Where(x => x.Text == filters.Text);
+            IEnumerable<ItemDTO> response = items.Where(x => x.Text == filters.Text).Select(s => new ItemDTO() { Id = s.Id, Text = s.Text });
             return response;
         }
 

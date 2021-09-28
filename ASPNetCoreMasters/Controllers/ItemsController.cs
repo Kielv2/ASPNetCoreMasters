@@ -33,10 +33,6 @@ namespace ASPNetCoreMasters.Controllers
         [HttpGet("{itemId}")]
         public IActionResult Get(int itemId)
         {
-            if (String.IsNullOrEmpty(itemId.ToString()))
-            {
-                return BadRequest("Invalid Input");
-            }
 
             var result = _itemService.Get(itemId);
             return Ok(result);
@@ -45,12 +41,12 @@ namespace ASPNetCoreMasters.Controllers
         [HttpGet("filterBy")]
         public IActionResult GetByFilters([FromQuery] Dictionary<string, string> filters)
         {
-            var filter = filters.FirstOrDefault(x => x.Value == "1").Value;
+            var filter = filters["Text"].ToString();
             var filterDTO = new ItemByFilterDTO();
             filterDTO.Text = filter;
-
-            _itemService.GetAllByFilter(filterDTO);
-            return Ok($"GetByFilters");
+           
+            var result = _itemService.GetAllByFilter(filterDTO);
+            return Ok(result);
         }
 
         [HttpPost]
