@@ -1,3 +1,5 @@
+using ASPNetCoreMasters.BindingModels;
+using ASPNetCoreMasters.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +33,8 @@ namespace ASPNetCoreMasters
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddSingleton<DataContext>();
+
+            services.Configure<AuthenticationSettings>(Configuration.GetSection("Authentication"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
