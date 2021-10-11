@@ -1,4 +1,5 @@
 using ASPNetCoreMasters.BindingModels;
+using ASPNetCoreMasters.Filters;
 using ASPNetCoreMasters.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +30,10 @@ namespace ASPNetCoreMasters
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers( options =>
+            {
+                options.Filters.Add(new ExecutionTimeFilter());
+            });
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddSingleton<DataContext>();
