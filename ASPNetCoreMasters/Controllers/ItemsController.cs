@@ -9,11 +9,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ASPNetCoreMasters.Filters;
 
 namespace ASPNetCoreMasters.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [EnsureItemIdExistFilter]
     public class ItemsController : ControllerBase
     {
         private readonly IItemService _itemService;
