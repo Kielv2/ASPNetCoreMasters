@@ -19,11 +19,18 @@ namespace ASPNetCoreMasters.Filters
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            var itemId = (int)context.ActionArguments["itemId"];
-            var isExist = _itemService.Get(itemId);
-            if (isExist == null)
+            object obj;
+            var itemIdHasValue = context.ActionArguments.TryGetValue("itemId", out obj);
+            if (itemIdHasValue)
             {
-                context.Result = new NotFoundResult();
+                var itemId = (int)context.ActionArguments["itemId"];
+
+                var isExist = _itemService.Get(itemId);
+                if (isExist == null)
+                {
+                    context.Result = new NotFoundResult();
+                }
+
             }
         }
     }

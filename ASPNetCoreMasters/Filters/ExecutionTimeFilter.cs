@@ -10,9 +10,8 @@ namespace ASPNetCoreMasters.Filters
     {
         public void OnResourceExecuted(ResourceExecutedContext context)
         {
-            context.HttpContext.Items["StartTime"] = DateTime.UtcNow;
             DateTime startTime = (DateTime)context.HttpContext.Items["StartTime"];
-            Console.WriteLine("Total Elapsed Time for Request is : " + (DateTime.UtcNow - startTime).TotalMilliseconds);
+            Console.WriteLine("Total Elapsed Time for Request is : " + (startTime - DateTime.UtcNow).TotalMilliseconds);
             Console.WriteLine("Request Ended.");
         }
 
