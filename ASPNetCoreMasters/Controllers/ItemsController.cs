@@ -13,6 +13,7 @@ using ASPNetCoreMasters.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace ASPNetCoreMasters.Controllers
 {
@@ -24,12 +25,14 @@ namespace ASPNetCoreMasters.Controllers
         private readonly IItemService _itemService;
         private readonly UserManager<IdentityUser> _userService;
         private readonly IAuthorizationService _authService;
+        private readonly ILogger<ItemsController> _logger;
 
-        public ItemsController(IItemService itemService, UserManager<IdentityUser> userService, IAuthorizationService authService)
+        public ItemsController(IItemService itemService, UserManager<IdentityUser> userService, IAuthorizationService authService, ILogger<ItemsController> logger)
         {
             _itemService = itemService;
             _userService = userService;
             _authService = authService;
+            _logger = logger;
         }
 
         [HttpGet]

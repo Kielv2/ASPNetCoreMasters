@@ -1,4 +1,5 @@
 ﻿using DomainModels;
+using Microsoft.Extensions.Logging;
 using Repositories;
 using Services.DTO;
 using System;
@@ -11,14 +12,17 @@ namespace Services
     {
         private readonly List<int> numbers = new List<int> { 1, 2, 3 };
         public readonly IItemRepository _itemRepository;
+        private readonly ILogger<ItemService> _logger;
 
-        public ItemService( IItemRepository itemRepository)
+        public ItemService( IItemRepository itemRepository, ILogger<ItemService> logger)
         {
             _itemRepository = itemRepository;
+            _logger = logger;
 
         }
         public IEnumerable<ItemDTO> GetAll()
         {
+            _logger.LogInformation("Getting all Items - {RequestTime}", DateTime.Now);
             var items = _itemRepository.All();
             IEnumerable<ItemDTO> response = items.Select(s => new ItemDTO() { Id = s.Id, Text = s.Text });
             return response;
@@ -26,6 +30,7 @@ namespace Services
 
         public IEnumerable<ItemDTO> GetAllByFilter(ItemByFilterDTO filters)
         {
+            _logger.LogInformation("Getting Items with Filter - {RequestTime}", DateTime.Now);
             var items = _itemRepository.All();
             IEnumerable<ItemDTO> response = items.Where(x => x.Text == filters.Text).Select(s => new ItemDTO() { Id = s.Id, Text = s.Text });
             return response;
@@ -33,7 +38,7 @@ namespace Services
 
         public ItemDTO Get(int itemId)
         {
-
+            _logger.LogInformation("Getting Items by Id. ItemId = {ItemId}. {RequestTime}", itemId.ToString(), DateTime.Now);
             var items = _itemRepository.All();
             return items.Select(s => new ItemDTO() { Id = s.Id, Text = s.Text }).Where(x => x.Id == itemId).FirstOrDefault();
 
@@ -41,6 +46,7 @@ namespace Services
 
         public void Add(ItemDTO itemDTO)
         {
+            _logger.LogInformation("Adding Item. {RequestTime}", DateTime.Now);
             Item item = new Item();
             item.Text = itemDTO.Text;
             item.Id = itemDTO.Id;
@@ -50,6 +56,7 @@ namespace Services
 
         public void Update(ItemDTO itemDTO)
         {
+            _logger.LogInformation("Updating Item. {RequestTime}", DateTime.Now);
             Item item = new Item();
             item.Text = itemDTO.Text;
             item.Id = itemDTO.Id;
@@ -58,17 +65,20 @@ namespace Services
 
         public void Delete(int id)
         {
+            _logger.LogInformation("Deleting Item. {RequestTime}", DateTime.Now);
             _itemRepository.Delete(id);
 
         }
         public IEnumerable<int> GetAll(int userId)
         {
+            _logger.LogInformation("Getting all Items - {RequestTime}", DateTime.Now);
             var arr = new int[] {1, 2, 3 };
             return arr;
         }
 
         public void Save(ItemDTO itemDTO)
         {
+            _logger.LogInformation("Saving item - {RequestTime}", DateTime.Now);
             var item = new Item();
             item.Text = itemDTO.Text;
 
