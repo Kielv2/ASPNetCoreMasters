@@ -107,8 +107,9 @@ namespace ASPNetCoreMasters.Controllers
         {
             IList<Claim> userClaims = new List<Claim>
             {
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
             var a = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(
             claims: userClaims,

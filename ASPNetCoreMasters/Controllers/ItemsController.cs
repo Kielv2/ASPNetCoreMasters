@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASPNetCoreMasters.Filters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace ASPNetCoreMasters.Controllers
 {
@@ -19,10 +22,14 @@ namespace ASPNetCoreMasters.Controllers
     public class ItemsController : ControllerBase
     {
         private readonly IItemService _itemService;
+        private readonly UserManager<IdentityUser> _userService;
+        private readonly IAuthorizationService _authService;
 
-        public ItemsController(IItemService itemService)
+        public ItemsController(IItemService itemService, UserManager<IdentityUser> userService, IAuthorizationService authService)
         {
             _itemService = itemService;
+            _userService = userService;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -52,24 +59,28 @@ namespace ASPNetCoreMasters.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] ItemCreateBindingModel itemcreatemodel)
+
+        public async Task<IActionResult> PostAsync([FromBody] ItemCreateBindingModel itemCreateModel)
         {
-
-            var itemDTO = new ItemDTO();
-            itemDTO.Text = itemcreatemodel.Text;
-            _itemService.Add(itemDTO);
-
-            return Ok($"Post {itemcreatemodel.Id} - {itemcreatemodel.Text} ");
+            var email = ((ClaimsIdentity)User.Identity).Name;
+            ItemDTO requestData = new ItemDTO() { Id = itemCreateModel.Id, Text = itemCreateModel.Text };
+            _itemService.Add(requestData);
+            return Ok(requestData);
         }
 
         [HttpPut("{itemId}")]
-        public IActionResult Put(int itemId, [FromBody] ItemUpdateBindingModel itemUpdateModel)
+        public async Task<IActionResult> PutAsync(int itemId, [FromBody] ItemUpdateBindingModel itemUpdateModel)
         {
-            var itemDTO = new ItemDTO();
-            itemDTO.Text = itemUpdateModel.Text;
-            _itemService.Update(itemDTO);
+            var itemVM = _itemService.Get(itemUpdateModel.ItemId);
+            var authResult = await _authService.AuthorizeAsync(User, new ItemDTO() { CreatedBy = itemVM.CreatedBy }, "CanEditItems");
+            if (!authResult.Succeeded)
+            {
+                return new ForbidResult();
+            }
+            ItemDTO requestData = new ItemDTO() { Id = itemUpdateModel.ItemId, Text = itemUpdateModel.Text };
 
-            return Ok($"Put {itemId} - {itemUpdateModel.Text} ");
+            _itemService.Update(requestData);
+            return Ok(requestData);
         }
 
         [HttpDelete("{itemId}")]

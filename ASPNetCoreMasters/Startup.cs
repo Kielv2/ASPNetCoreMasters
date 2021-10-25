@@ -3,7 +3,9 @@ using ASPNetCoreMasters.Data;
 using ASPNetCoreMasters.Filters;
 using ASPNetCoreMasters.Models;
 using ASPNetCoreMasters.Options;
+using ASPNetCoreMastersTodoList.Api.Authorisation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -41,6 +43,14 @@ namespace ASPNetCoreMasters
             {
                 options.Filters.Add(new ExecutionTimeFilter());
             });
+
+            services.AddAuthorization(options => {
+                options.AddPolicy("CanEditItems",
+                    policy => policy.Requirements.Add(new IsItemOwnerRequirement()));
+            });
+
+            services.AddScoped<IAuthorizationHandler, IsItemOwnerHandler>();
+
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddSingleton<DataContext>();

@@ -7,6 +7,7 @@ namespace ASPNetCoreMasters.BindingModels
 {
     public class ItemUpdateBindingModel
     {
+        public int ItemId { get; set; }
         public string Text { get; set; }
     }
 }
