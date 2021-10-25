@@ -25,9 +25,9 @@ namespace ASPNetCoreMasters.Controllers
         private AuthenticationSettings _authSettings;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly JWTOptions _jwtOptions;
-        public UsersController(UserManager<IdentityUser> userManager, IOptionsSnapshot<AuthenticationSettings> options)
+        public UsersController(UserManager<IdentityUser> userManager, IOptions<JWTOptions> jwtOptions)
         {
-            _authSettings = options.Value;
+              _jwtOptions = jwtOptions.Value;
             _userManager = userManager;
         }
 
@@ -75,7 +75,7 @@ namespace ASPNetCoreMasters.Controllers
         }
 
 
-        [HttpGet("login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login(LoginBindingModel login)
         {
             IActionResult actionResult;
